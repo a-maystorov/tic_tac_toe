@@ -20,18 +20,24 @@ class Game:
 
         self.grid = Grid(self)
 
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        self.screen.fill(self.settings.bg_color)
+        self.grid.draw()
+
+        pygame.display.flip()
+
     def run_game(self):
         """Start the main loop for the game."""
         while True:
-            # Watch for keyboard and mouse events.
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-
-            self.screen.fill(self.settings.bg_color)
-            self.grid.draw()
-
-            pygame.display.flip()
+            self._check_events()
+            self._update_screen()
             self.clock.tick(60)
 
 
