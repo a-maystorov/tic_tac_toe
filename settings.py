@@ -8,3 +8,8 @@ class Settings:
         self.screen_width = 300
         self.screen_height = 300
         self.bg_color = (230, 230, 230)
+
+        # Grid settings
+        self.grid_line_color = (50, 50, 50)
+        self.grid_line_width = 6
+        self.grid_tile_size = 100
