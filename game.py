@@ -12,6 +12,10 @@ class Game:
         self.screen = pygame.display.set_mode((300, 300))
         pygame.display.set_caption("Tic Tac Toe")
 
+        self.clock = pygame.time.Clock()
+
+        self.bg_color = (230, 230, 230)
+
     def run_game(self):
         """Start the main loop for the game."""
         while True:
@@ -20,8 +24,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     sys.exit()
 
+            self.screen.fill(self.bg_color)
+
             # Make the most recently drawn screen visible.
             pygame.display.flip()
+            self.clock.tick(60)
 
 
 if __name__ == '__main__':
