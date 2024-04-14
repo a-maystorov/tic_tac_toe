@@ -4,6 +4,8 @@ import pygame
 
 from settings import Settings
 from grid import Grid
+from button import Button
+from message import Message
 
 
 class Game:
@@ -19,11 +21,25 @@ class Game:
         pygame.display.set_caption("Tic Tac Toe")
 
         self.grid = Grid(self)
+        self.winner = None
+        self.game_result_msg = None
+        self.play_again_button = Button(self, "Play again")
+
+        # Start game in an inactive state.
+        self.game_active = True
+
+    def _check_play_again_button(self, mouse_pos):
+        """Start a new game when the player clicks Play."""
+        button_clicked = self.play_again_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.game_active:
+            self.game_active = True
+            self.grid.reset()
 
     def _check_mouse_button_down_events(self, event):
         """Respond to mouse button presses."""
         mouse_pos = event.pos
         self.grid.update(mouse_pos)
+        self._check_play_again_button(mouse_pos)
 
     def _check_events(self):
         """Respond to keypresses and mouse events."""
@@ -36,7 +52,12 @@ class Game:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
-        self.grid.draw()
+
+        if self.game_active:
+            self.grid.draw()
+        else:
+            self.game_result_msg.draw()
+            self.play_again_button.draw()
 
         pygame.display.flip()
 
@@ -44,6 +65,18 @@ class Game:
         """Start the main loop for the game."""
         while True:
             self._check_events()
+
+            winner = self.grid.check_winner()
+            if winner:
+                self.winner = winner
+                self.game_result_msg = Message(self, f"Player {self.winner} wins!", 48, (0, 0, 0),
+                                               center=(self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
+                self.game_active = False
+            elif self.grid.is_full() and not winner:  # Check if all cells are filled and no winner
+                self.game_result_msg = Message(self, "It's a tie!", 48, (0, 0, 0),
+                                               center=(self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
+                self.game_active = False
+
             self._update_screen()
             self.clock.tick(60)
 

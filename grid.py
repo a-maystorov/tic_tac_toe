@@ -49,3 +49,39 @@ class Grid:
         if self.cells[row][col] is None:
             self.cells[row][col] = self.current_turn
             self.current_turn = 'O' if self.current_turn == 'X' else 'X'
+
+    def check_winner(self):
+        """Check for a winner by testing each win condition."""
+        # Check rows for winner
+        for i in range(3):
+            if self.cells[i][0] == self.cells[i][1] == self.cells[i][2] != None:
+                return self.cells[i][0]
+
+        # Check columns for winner
+        for i in range(3):
+            if self.cells[0][i] == self.cells[1][i] == self.cells[2][i] != None:
+                return self.cells[0][i]
+
+        # Check diagonal (top-left to bottom-right)
+        if self.cells[0][0] == self.cells[1][1] == self.cells[2][2] != None:
+            return self.cells[0][0]
+
+        # Check diagonal (bottom-left to top-right)
+        if self.cells[2][0] == self.cells[1][1] == self.cells[0][2] != None:
+            return self.cells[2][0]
+
+        # No winner found
+        return None
+
+    def is_full(self):
+        """Return True if all cells are filled, indicating a potential tie if no winner is found."""
+        for row in self.cells:
+            for cell in row:
+                if cell is None:
+                    return False
+        return True
+
+    def reset(self):
+        """Reset the game grid and current turn."""
+        self.cells = [[None, None, None] for _ in range(3)]
+        self.current_turn = 'X'
