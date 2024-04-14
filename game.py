@@ -49,6 +49,19 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self._check_mouse_button_down_events(event)
 
+    def _check_winner(self):
+        """Check if a player has won or not and display the proper message."""
+        winner = self.grid.check_winner()
+        if winner:
+            self.winner = winner
+            self.game_result_msg = Message(self, f"Player {self.winner} wins!", center=(
+                self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
+            self.game_active = False
+        elif self.grid.is_full() and not winner:  # Check if all cells are filled and no winner
+            self.game_result_msg = Message(self, "It's a tie!", center=(
+                self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
+            self.game_active = False
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
@@ -65,18 +78,7 @@ class Game:
         """Start the main loop for the game."""
         while True:
             self._check_events()
-
-            winner = self.grid.check_winner()
-            if winner:
-                self.winner = winner
-                self.game_result_msg = Message(self, f"Player {self.winner} wins!", 48, (0, 0, 0),
-                                               center=(self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
-                self.game_active = False
-            elif self.grid.is_full() and not winner:  # Check if all cells are filled and no winner
-                self.game_result_msg = Message(self, "It's a tie!", 48, (0, 0, 0),
-                                               center=(self.settings.screen_width / 2, self.settings.screen_height / 2 - 60))
-                self.game_active = False
-
+            self._check_winner()
             self._update_screen()
             self.clock.tick(60)
 

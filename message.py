@@ -2,7 +2,7 @@ import pygame.font
 
 
 class Message:
-    def __init__(self, game, msg, font_size, color, center=None):
+    def __init__(self, game, msg, font_size=48, color=(0, 0, 0), center=None):
         """Initialize message attributes."""
         self.screen = game.screen
         self.font = pygame.font.Font(None, font_size)
